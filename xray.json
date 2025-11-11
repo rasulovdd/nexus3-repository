@@ -1,0 +1,57 @@
+{
+    "log": {
+        "loglevel": "warning"
+    },
+    "inbounds": [{
+            "tag": "http-in",
+            "listen": "0.0.0.0",
+            "port": 10809,
+            "protocol": "http",
+            "settings": {}
+        }, {
+            "tag": "socks-in",
+            "listen": "0.0.0.0",
+            "port": 10808,
+            "protocol": "socks",
+            "settings": {
+                "udp": true
+            }
+        }
+    ],
+    "outbounds": [{
+            "tag": "vless-out",
+            "protocol": "vless",
+            "settings": {
+                "vnext": [{
+                        "address": "SERVER_IP",
+                        "port": 443,
+                        "users": [{
+                                "id": "9c74a382-c7a1-4faa-a82d-84532efed",
+                                "encryption": "none",
+                                "flow": "xtls-rprx-vision"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "tcp",
+                "security": "reality",
+                "realitySettings": {
+                    "serverName": "api.github.com",
+                    "publicKey": "hroijhxhuMkYhtZT36uFDDOeFwXHN0yhr9xFH",
+                    "shortId": "02ac"
+                }
+            }
+        }
+    ],
+    "routing": {
+        "domainStrategy": "AsIs",
+        "rules": [{
+                "type": "field",
+                "inboundTag": ["http-in", "socks-in"],
+                "outboundTag": "vless-out"
+            }
+        ]
+    }
+}

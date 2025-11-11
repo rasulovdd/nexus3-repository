@@ -1,0 +1,54 @@
+version: "3.8"
+
+networks:
+  proxy-net:
+    driver: bridge
+
+services:
+  xray:
+    image: teddysun/xray:latest
+    container_name: vless-xray
+    restart: unless-stopped
+    volumes:
+      - ./xray.json:/etc/xray/config.json:ro
+    ports:
+      - "10808:10808"
+      - "10809:10809"
+    command: ["xray", "-config", "/etc/xray/config.json"]
+    networks:
+      - proxy-net
+
+  nexus:
+    image: sonatype/nexus3:latest
+    container_name: nexus
+    restart: unless-stopped
+    depends_on:
+      - xray
+    environment:
+      - http_proxy=http://xray:10809
+      - https_proxy=http://xray:10809
+      - no_proxy=localhost,127.0.0.1,*.local
+      - NEXUS_JAVA_OPTS=-Dhttp.proxyHost=xray -Dhttp.proxyPort=10809 -Dhttps.proxyHost=xray -Dhttps.proxyPort=10809 -Dhttp.nonProxyHosts="localhost|127.0.0.1|*.local"
+    ports:
+      - "8081:8081"
+      - "8181:8181"
+    volumes:
+      - nexus-data:/nexus-data
+    networks:
+      - proxy-net
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    restart: unless-stopped
+    depends_on:
+      - nexus
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - proxy-net
+
+volumes:
+  nexus-data:
