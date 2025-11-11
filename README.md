@@ -50,6 +50,12 @@
     ```bash
     docker compose up -d
     ```
+    проверяем поднялся ли Vless.<br/>
+    ```
+    curl --socks5 127.0.0.1:1080 http://2ip.ru
+    ```
+    Если команда покажет IP адрес VPN сервера, значит все ок ) идем дальше
+    <br/><br/>
 
     Смотрим log запуска docker контейнера Nexus<br/>
     ```bash
@@ -142,8 +148,8 @@
     пример файла (меняем на ваш домен которую вы указали в nginx)
     ```bash
     {
-     "registry-mirrors": ["http://nexus01.domain.ru:8181"],
-     "insecure-registries": ["nexus01.domain.ru:8181"]
+     "registry-mirrors": ["http://nexus01.domain.ru"],
+     "insecure-registries": ["nexus01.domain.ru"]
     }
     ```
 
@@ -164,10 +170,10 @@
     Если видим вот эти данные, то все настроено правильно 
     ```
     Insecure Registries:
-    nexus01.domain.ru:8181
+    nexus01.domain.ru
     ::1/128
     127.0.0.0/8
     Registry Mirrors:
-    http://nexus01.domain.ru:8181/
+    http://nexus01.domain.ru/
     Live Restore Enabled: false
     ```
