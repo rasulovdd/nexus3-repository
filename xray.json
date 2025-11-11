@@ -38,9 +38,12 @@
                 "network": "tcp",
                 "security": "reality",
                 "realitySettings": {
+                    "show": false,
+                    "fingerprint": "chrome",
                     "serverName": "api.github.com",
                     "publicKey": "hroijhxhuMkYhtZT36uFDDOeFwXHN0yhr9xFH",
-                    "shortId": "02ac"
+                    "shortId": "02ac",
+                    "spiderX": "/"
                 }
             }
         }
