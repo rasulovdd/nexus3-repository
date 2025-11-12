@@ -200,11 +200,11 @@
     sudo nano /etc/systemd/system/docker.service.d/http-proxy.conf
     ```
     
-    добавляем 
+    добавляем nexus01.domain.ru (поменяйте на свой адрес)
     ```bash
     [Service]
-    Environment="HTTP_PROXY=http://nexus01.mgtniip.ru:10809"
-    Environment="HTTPS_PROXY=http://nexus01.mgtniip.ru:10809"
+    Environment="HTTP_PROXY=http://nexus01.domain.ru:10809"
+    Environment="HTTPS_PROXY=http://nexus01.domain.ru:10809"
     Environment="NO_PROXY=localhost,127.0.0.1,*.local"
     ```
 
