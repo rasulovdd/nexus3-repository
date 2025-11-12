@@ -15,8 +15,7 @@ services:
       - "10808:10808"
       - "10809:10809"
     command: ["xray", "-config", "/etc/xray/config.json"]
-    networks:
-      - proxy-net
+    network_mode: host
 
   nexus:
     image: sonatype/nexus3:latest
