@@ -60,11 +60,19 @@
     ```bash
     docker compose up -d
     ```
+    
     проверяем поднялся ли Vless.<br/>
     ```
     curl --socks5 127.0.0.1:1080 http://2ip.ru
+    # если команда покажет IP адрес VPN сервера, значит все ок ) идем дальше
     ```
-    Если команда покажет IP адрес VPN сервера, значит все ок ) идем дальше
+    
+    проверьте прокси
+    ```
+    curl --proxy http://127.0.0.1:10809 -I https://docker.getcollate.io
+    # если получаем HTTP/1.1 200 Connection established то все ок
+    ```
+    
     <br/><br/>
 
     Смотрим log запуска docker контейнера Nexus<br/>
