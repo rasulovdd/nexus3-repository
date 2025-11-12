@@ -14,11 +14,21 @@
 ## Установка
 
 1. Скачайте<br/>
-
+    Структура:
+    ```
+    project/
+    ├── docker-compose.yml
+    ├── nginx.conf
+    └── ssl/
+        ├── cert.pem
+        └── key.pem
+    ```
     ```bash
     git clone https://github.com/rasulovdd/nexus3-repository.git && cd nexus3-repository
     ```
     <br/>
+
+
 2. Отркрываем файл xray.json и редактируем <br/>
 
     ```bash
