@@ -67,19 +67,41 @@
     # если команда покажет IP адрес VPN сервера, значит все ок ) идем дальше
     ```
     
-    проверьте прокси
-    ```
-    curl --proxy http://127.0.0.1:10809 -I https://docker.getcollate.io
-    # если получаем HTTP/1.1 200 Connection established то все ок
-    ```
-    
-    <br/><br/>
-
     Смотрим log запуска docker контейнера Nexus<br/>
     ```bash
     docker logs -f nexus
     ```
     Дожидаемся запуска и надписи <b>Started Sonatype Nexus</b><br/><br/>
+
+5. Настраиваем systemd 
+
+    ```bash
+    sudo mkdir -p /etc/systemd/system/docker.service.d
+    sudo nano /etc/systemd/system/docker.service.d/proxy.conf
+    ```
+
+    вставляем:
+    ```[Service]
+    Environment="HTTP_PROXY=http://127.0.0.1:10809"
+    Environment="HTTPS_PROXY=http://127.0.0.1:10809"
+    Environment="NO_PROXY=localhost,127.0.0.1,*.local"
+    ```
+    перезапускаем 
+    ```bash
+    sudo systemctl daemon-reload
+    sudo systemctl restart docker
+    ```
+    
+    Проверяем, что xray слушает порты
+    ```bash
+    netstat -tlnp | grep 10809
+    ```
+
+    проверяем прокси
+    ```
+    curl --proxy http://127.0.0.1:10809 -I https://docker.getcollate.io
+    # если получаем HTTP/1.1 200 Connection established то все ок
+    ```
 
 5. Получаем пароль от админской учетной записи. Подключаемся к контейнеру с Nexus<br/>
     
@@ -171,9 +193,25 @@
     }
     ```
 
-2. Перезапускаем docker
+2. Настраеваем прокси через systemd
+    
+    ```bash
+    sudo mkdir -p /etc/systemd/system/docker.service.d
+    sudo nano /etc/systemd/system/docker.service.d/http-proxy.conf
+    ```
+    
+    добавляем nexus01.domain.ru (поменяйте на свой адрес)
+    ```bash
+    [Service]
+    Environment="HTTP_PROXY=http://nexus01.domain.ru:10809"
+    Environment="HTTPS_PROXY=http://nexus01.domain.ru:10809"
+    Environment="NO_PROXY=localhost,127.0.0.1,*.local"
+    ```
+
+3. Перезапускаем docker
 
     ```bash
+    sudo systemctl daemon-reload
     sudo systemctl restart docker
     ```
     <br/>
